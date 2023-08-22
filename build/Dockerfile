@@ -1,22 +1,28 @@
 ARG base_img
-FROM nvidia/cuda:10.1-devel-centos7 as build
+FROM nvidia/cuda:11.3.1-devel-centos8 as build
 
 ARG version
 ARG commit
+ARG TARGETARCH
+
+RUN cd /etc/yum.repos.d/ \
+    && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
 RUN yum install -y rpm-build make
 
 # default git has problems while cloning some repository
-RUN yum install -y https://repo.ius.io/ius-release-el7.rpm \
-  && yum install -y git222
+RUN yum install -y git
 
 ENV GOLANG_VERSION 1.14.3
-RUN curl -sSL https://dl.google.com/go/go${GOLANG_VERSION}.linux-amd64.tar.gz \
+RUN curl -sSL https://dl.google.com/go/go${GOLANG_VERSION}.linux-${TARGETARCH}.tar.gz \
     | tar -C /usr/local -xz
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 RUN mkdir -p /root/rpmbuild/{SPECS,SOURCES}
+
+RUN go env -w GOPROXY="https://goproxy.io,direct"
 
 COPY gpu-manager.spec /root/rpmbuild/SPECS
 COPY gpu-manager-source.tar.gz /root/rpmbuild/SOURCES
@@ -34,15 +40,16 @@ FROM $base_img
 
 ARG version
 ARG commit
+ARG arch
 
-COPY --from=build /root/rpmbuild/RPMS/x86_64/gpu-manager-${version}-${commit}.el7.x86_64.rpm /tmp
+COPY --from=build /root/rpmbuild/RPMS/${arch}/gpu-manager-${version}-${commit}.el8.${arch}.rpm /tmp
 
 RUN yum install epel-release -y && \
   yum install -y which jq
 
 # Install packages
-RUN rpm -ivh /tmp/gpu-manager-${version}-${commit}.el7.x86_64.rpm \
-	&& rm -rf /tmp/gpu-manager-${version}-${commit}.el7.x86_64.rpm
+RUN rpm -ivh /tmp/gpu-manager-${version}-${commit}.el8.${arch}.rpm \
+	&& rm -rf /tmp/gpu-manager-${version}-${commit}.el8.${arch}.rpm
 
 # kubelet
 VOLUME ["/var/lib/kubelet/device-plugins"]

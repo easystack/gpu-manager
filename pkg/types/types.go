@@ -22,13 +22,13 @@ import (
 )
 
 const (
-	VDeviceAnnotation       = "tencent.com/vcuda-device"
-	VCoreAnnotation         = "tencent.com/vcuda-core"
-	VCoreLimitAnnotation    = "tencent.com/vcuda-core-limit"
-	VMemoryAnnotation       = "tencent.com/vcuda-memory"
-	PredicateTimeAnnotation = "tencent.com/predicate-time"
-	PredicateGPUIndexPrefix = "tencent.com/predicate-gpu-idx-"
-	GPUAssigned             = "tencent.com/gpu-assigned"
+	VDeviceAnnotation       = "ecnf.io/vcuda-device"
+	VCoreAnnotation         = "ecnf.io/vcuda-core"
+	VCoreLimitAnnotation    = "ecnf.io/vcuda-core-limit"
+	VMemoryAnnotation       = "ecnf.io/vcuda-memory"
+	PredicateTimeAnnotation = "ecnf.io/predicate-time"
+	PredicateGPUIndexPrefix = "ecnf.io/predicate-gpu-idx-"
+	GPUAssigned             = "ecnf.io/gpu-assigned"
 	ClusterNameAnnotation   = "clusterName"
 
 	VCUDA_MOUNTPOINT = "/etc/vcuda"

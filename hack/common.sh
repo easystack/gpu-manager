@@ -3,7 +3,8 @@
 readonly PACKAGE="tkestack.io/gpu-manager"
 readonly BUILD_IMAGE_REPO=plugin-build
 readonly LOCAL_OUTPUT_IMAGE_STAGING="${ROOT}/go/images"
-readonly IMAGE_FILE=${IMAGE_FILE:-"thomassong/gpu-manager"}
+readonly IMAGE_FILE=${IMAGE_FILE:-"hub.easystack.cn/production/gpu-manager"}
+readonly IMAGE_TAG=${IMAGE_TAG:-"v1.1.6-es"}
 readonly PROTO_IMAGE="proto-generater"
 
 function plugin::cleanup() {
