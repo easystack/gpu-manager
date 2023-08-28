@@ -38,6 +38,9 @@ func (m *responseManager) LoadFromFile(path string) error {
 	if err != nil {
 		return err
 	}
+	if cp == nil {
+		return nil
+	}
 
 	for _, item := range cp.PodDeviceEntries {
 		// Only vcore resource has valid response data

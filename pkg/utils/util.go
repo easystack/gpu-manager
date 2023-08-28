@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net"
+	"os"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -126,6 +127,10 @@ func GetCheckpointData(devicePluginPath string) (*types.Checkpoint, error) {
 	cpFile := filepath.Join(devicePluginPath, types.CheckPointFileName)
 	data, err := ioutil.ReadFile(cpFile)
 	if err != nil {
+		if os.IsNotExist(err) {
+			klog.V(4).Infof("Failed to read data from checkpoint: No such file")
+			return nil, nil
+		}
 		return nil, err
 	}
 	klog.V(4).Infof("Try NUMA checkpoint data format")
