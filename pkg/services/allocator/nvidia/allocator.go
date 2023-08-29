@@ -815,7 +815,7 @@ func (ta *NvidiaTopoAllocator) PreStartContainer(ctx context.Context, req *plugi
 
 	// try to get podUID, containerName, vcore and vmemory from kubelet deviceplugin checkpoint file
 	cp, err := utils.GetCheckpointData(ta.config.DevicePluginPath)
-	if err != nil {
+	if err != nil || cp == nil {
 		msg := fmt.Sprintf("%s, failed to read from checkpoint file due to %v",
 			types.PreStartContainerCheckErrMsg, err)
 		klog.Infof(msg)
